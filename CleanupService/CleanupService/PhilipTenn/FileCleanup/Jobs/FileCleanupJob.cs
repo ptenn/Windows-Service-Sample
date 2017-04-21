@@ -63,17 +63,17 @@ namespace PhilipTenn.FileCleanup.Jobs
                                         try
                                         {
                                             File.Delete(fileName);
-                                            logger.Debug(String.Format("Successfully deleted file '{0}'.", fileName));
+                                            logger.Debug($"Successfully deleted file '{fileName}'.");
                                         }
                                         catch (Exception fileEx)
                                         {
-                                            logger.Debug(String.Format("Exception occurred attempting to delete file '{0}'.", fileName), fileEx);
+                                            logger.Debug($"Exception occurred attempting to delete file '{fileName}'.", fileEx);
                                         }
 
                                     }
                                     else
                                     {
-                                        logger.Debug(String.Format("Do not have permissions to delete file '{0}'", folder.Path));
+                                        logger.Debug($"Do not have permissions to delete file '{folder.Path}'");
                                     }
 
                                 }
@@ -83,34 +83,32 @@ namespace PhilipTenn.FileCleanup.Jobs
                             if (folder.DeleteSubFolders)
                             {
                                 logger.Debug("Configured to delete subfolders.");
-                                String[] directoryNames = Directory.GetDirectories(folder.Path);
-                                foreach (String directoryName in directoryNames)
+                                string[] directoryNames = Directory.GetDirectories(folder.Path);
+                                foreach (string directoryName in directoryNames)
                                 {
                                     if (DateTime.Compare(DateTime.Now,
                                             File.GetCreationTime(directoryName).AddDays(folder.CleanupDays).AddHours(folder.CleanupHours)) > 0)
                                     {
-                                        logger.Debug(String.Format(
-                                            "Found subdirectory '{0}' older than {1} days, {2} hours, checking file permissions.",
-                                            directoryName, folder.CleanupDays, folder.CleanupHours));
+                                        logger.Debug($"Found subdirectory '{directoryName}' older than {folder.CleanupDays} days, {folder.CleanupHours} hours, checking file permissions.");
                                         UserFileAccessRights userFileAccessRights = new UserFileAccessRights(folder.Path);
 
                                         if (userFileAccessRights.canDeleteSubdirectoriesAndFiles())
                                         {
-                                            logger.Debug(String.Format("Verified permissions to delete directory '{0}' and subdirectories, attempting delete.", directoryName));
+                                            logger.Debug($"Verified permissions to delete directory '{directoryName}' and subdirectories, attempting delete.");
                                             try
                                             {
                                                 Directory.Delete(directoryName, true);
-                                                logger.Debug(String.Format("Successfully deleted directory '{0}' and subdirectories.", directoryName));
+                                                logger.Debug($"Successfully deleted directory '{directoryName}' and subdirectories.");
                                             }
                                             catch (Exception dirEx)
                                             {
-                                                logger.Debug(String.Format("Exception occurred attempting to delete directory '{0}' and subdirectories.", directoryName), dirEx);
+                                                logger.Debug($"Exception occurred attempting to delete directory '{directoryName}' and subdirectories.", dirEx);
                                             }
 
                                         }
                                         else
                                         {
-                                            logger.Debug(String.Format("Do not have permissions to delete files and subdirectories in folder '{0}'", folder.Path));
+                                            logger.Debug($"Do not have permissions to delete files and subdirectories in folder '{folder.Path}'");
                                         }
 
                                     }
@@ -119,8 +117,7 @@ namespace PhilipTenn.FileCleanup.Jobs
                         }
                         else
                         {
-                            logger.Warn(String.Format("Attmpted to check Folder {0}, but path '{1}' does not exist",
-                                folder.Name, folder.Path));
+                            logger.Warn($"Attmpted to check Folder {folder.Name}, but path '{folder.Path}' does not exist");
                         }
                     }
                 }
