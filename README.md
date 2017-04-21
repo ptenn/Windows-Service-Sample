@@ -33,3 +33,11 @@ The Quartz Job and Trigger is configured using Quartz's Builders, which resemble
             .Build();
 
 I created an external XML file for Quartz Jobs and Triggers in the repository `quartzJobsAndTriggers.xml`, but could not figure out how to get that mechanism wired up correctly.
+
+Unfortunately, reconfiguring the Job / Trigger interval requires a recompile.
+
+After building the Solution, open a Visual Studio Command Prompt and run
+
+    installutil CleanService.exe  
+
+To install the Windows Service. 
